@@ -15,12 +15,6 @@
 
   tasks:
 
-  - name: create output file
-    file: path={{workspace}}/results.txt state=touch
-    register: fileCreate
-    delegate_to: localhost
-
-
   - name:  Stopping Managed Servers on node1
     shell: cd {{domainDir}}/bin && sh stopManagedWebLogic.sh {{ item }}
     with_items:
@@ -65,10 +59,4 @@
     shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}}
     register: resCmd
     when: inventory_hostname in groups['liferayDEV01_Node1']
-    run_once: true
-
-  - name: print weblogic status to results file
-    shell: echo "Created file info with Timestamp - {{resCmd.stdout}}" >> {{workspace}}/results.txt
-    when: not(resCmd|skipped)
-    delegate_to: localhost
     run_once: true

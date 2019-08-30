@@ -55,19 +55,6 @@ try {
         	    extras: "-e workspace=${workspace} -e application_name=${APPLICATION}")
       }
 
-
- stage ('PrintResult'){
-
- if(!fileExists('results.txt')) {
-
-	 sh 'echo results.txt doesnot exists'
-
-	 }
- else {
-
-    sh 'cat ${WORKSPACE}/results.txt'
-}
-}
 }catch (e) {
   	    currentBuild.result = "FAILED"
   	    throw e
@@ -83,8 +70,6 @@ def notifyBuild(String buildStatus = 'STARTED') {
 buildStatus =  buildStatus ?: 'SUCCESSFUL'
 
 	emailext(
-	attachLog: true,
-	attachmentsPattern: 'results.txt',
 	to: '${EmailAddress}',
 	subject: "${buildStatus}: Job '${env.JOB_NAME} [${env.BUILD_NUMBER}]'",
 	mimeType: 'text/html',
