@@ -1,16 +1,24 @@
 [DEV01]
 #Lifeary
-aserver    ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
-managed1   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
-managed3   ansible_ssh_host=67.205.176.89   ansible_connection=ssh   ansible_user=sdasari
-managed2   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+liferayDEV01aserver    ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+liferayDEV01managed1   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+liferayDEV01managed3   ansible_ssh_host=67.205.176.89   ansible_connection=ssh   ansible_user=sdasari
+liferayDEV01managed2   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
 
 
 
-[Aserver]
-aserver
+[Admin_server]
+liferayDEV01aserver
 
-[Mserver]
-managed1
-managed2
-managed3
+[Managed_server]
+liferayDEV01managed1
+liferayDEV01managed2
+liferayDEV01managed3
+
+[liferayDEV01_Node1]
+liferayDEV01aserver
+liferayDEV01managed1
+liferayDEV01managed2
+
+[liferayDEV01_Node2]
+liferayDEV01managed3

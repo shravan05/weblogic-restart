@@ -1,18 +1,11 @@
+# This contains groups & vars for DEV01
+
 [Liferay:children]
-Node1
-Node2
+Weblogic
 
 [Weblogic:children]
-Aserver
-Mserver
-
-[Node1:children]
-aserver
-managed1
-managed2
-
-[Node2:children]
-managed3
+Admin_server
+Managed_server
 
 [DEV01:vars]
 deploy_user=oracle
