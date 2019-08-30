@@ -27,7 +27,7 @@
     become_user: oracle
     become_method: sudo
     ignore_errors: yes
-    when: inventory_hostname in groups['Node1']
+    when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
   - name: Cleaning tmp & cache directories for Managed Server managed1
@@ -42,7 +42,7 @@
     become: yes
     become_user: oracle
     become_method: sudo
-    when: inventory_hostname in groups['Node1']
+    when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
   - name: Starting Managed Servers on Node1
@@ -53,7 +53,7 @@
     become: yes
     become_user: oracle
     become_method: sudo
-    when: inventory_hostname in groups['Node1']
+    when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
 
@@ -67,7 +67,7 @@
     become: yes
     become_user: oracle
     become_method: sudo
-    when: inventory_hostname in groups['Node1']
+    when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
   - name: Executing wlst script for Weblogic status
@@ -76,7 +76,7 @@
     become_user: oracle
     become_method: sudo
     register: resCmd
-    when: inventory_hostname in groups['Node1']
+    when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
   - name: print weblogic status to results file
