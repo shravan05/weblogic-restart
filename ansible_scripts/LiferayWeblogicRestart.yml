@@ -13,5 +13,8 @@
   vars_files:
     - ./vars/passwd.yml
 
-  - include: node1.yml
-  - include: node2.yml
+  tasks:
+
+    - include: node1.yml
+    
+    - include: node2.yml
