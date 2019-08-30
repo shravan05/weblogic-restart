@@ -65,6 +65,5 @@
     register: op
     run_once: true
 
-  - name: printing servers status
-    shell: echo "{{op.stdout}}"
+  - debug: msg='Servers Status..{{op}}'
     run_once: true
