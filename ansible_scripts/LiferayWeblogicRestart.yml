@@ -65,5 +65,5 @@
     register: op
     run_once: true
 
-  - debug: msg='Servers Status..{{op}}'
+  - debug: msg='Servers Status..{{op.stdout}}'
     run_once: true
