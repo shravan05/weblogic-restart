@@ -56,10 +56,10 @@
     run_once: true
 
   - name: Executing wlst script for Weblogic status
-    shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}}
-    register: resCmd
+    shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}} > serverstatus.log
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
-  - debug: msg='Below is the serverstatus..{{resCmd.stdout}}'
+  - name: Printing serverstatus
+    shell: cat {{wlsDir}}/bin/serverstatus.log
     run_once: true
