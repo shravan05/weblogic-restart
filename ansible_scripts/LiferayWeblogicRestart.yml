@@ -16,7 +16,5 @@
   tasks:
 
     - include: node1.yml
-      delegate_to: inventory_hostname in groups['liferayDEV01_Node1']
 
     - include: node2.yml
-      delegate_to: inventory_hostname in groups['liferayDEV01_Node2']

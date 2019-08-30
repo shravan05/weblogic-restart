@@ -4,7 +4,6 @@
       - managed3
     ignore_errors: yes
     when: inventory_hostname in groups['liferayDEV01_Node2']
-    run_once: true
 
   - name: Cleaning tmp & cache directories for Managed Servers on node2
     file:
@@ -14,14 +13,12 @@
       - { servers: 'managed3', deles: 'tmp' }
       - { servers: 'managed3', deles: 'cache' }
     when: inventory_hostname in groups['liferayDEV01_Node2']
-    run_once: true
 
   - name: Starting Managed Servers on Node2
     shell: cd {{domainDir}}/bin; nohup sh startManagedWebLogic.sh {{ item }} > {{ item }}.log &
     with_items:
       - managed3
     when: inventory_hostname in groups['liferayDEV01_Node2']
-    run_once: true
 
 
   - name: Wait until managed servers comes to RUNNING Mode on node2
@@ -31,4 +28,3 @@
     with_items:
       - managed3
     when: inventory_hostname in groups['liferayDEV01_Node2']
-    run_once: true
