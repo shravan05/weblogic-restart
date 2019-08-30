@@ -6,6 +6,9 @@
 
 - hosts: all
   remote_user: '{{ mi_user }}'
+  become: yes
+  become_user: oracle
+  become_method: sudo
 
   vars_files:
     - ./vars/passwd.yml
@@ -23,9 +26,6 @@
     with_items:
       - managed1
       - managed2
-    become: yes
-    become_user: oracle
-    become_method: sudo
     ignore_errors: yes
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
@@ -39,9 +39,6 @@
       - { servers: 'managed1', deles: 'cache' }
       - { servers: 'managed2', deles: 'tmp' }
       - { servers: 'managed2', deles: 'cache' }
-    become: yes
-    become_user: oracle
-    become_method: sudo
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
@@ -50,9 +47,6 @@
     with_items:
       - managed1
       - managed2
-    become: yes
-    become_user: oracle
-    become_method: sudo
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
@@ -64,17 +58,11 @@
     with_items:
       - managed1
       - managed2
-    become: yes
-    become_user: oracle
-    become_method: sudo
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
   - name: Executing wlst script for Weblogic status
     shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}}
-    become: yes
-    become_user: oracle
-    become_method: sudo
     register: resCmd
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
