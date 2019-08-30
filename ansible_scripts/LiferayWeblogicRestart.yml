@@ -60,3 +60,5 @@
     register: resCmd
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
+
+  - debug: msg='Below is the serverstatus..{{resCmd}}'
