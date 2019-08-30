@@ -1,0 +1,27 @@
+[Liferay:children]
+Node1
+Node2
+
+[Weblogic:children]
+Aserver
+Mserver
+
+[Node1:children]
+aserver
+managed1
+managed2
+
+[Node2:children]
+managed3
+
+[DEV01:vars]
+deploy_user=oracle
+mi_user=sdasari
+baseDir=/u01/app/oracle
+ansible_become_user=oracle
+ansible_become_method=sudo
+ansible_become_pass= "{{ vault_sdasari_sudo_password }}"
+weblogicUser= weblogic
+weblogicPass= "{{ vault_weblogic_pass }}"
+domainDir= /u01/app/oracle/Middleware/Oracle_Home/user_projects/domains/base_domain
+wlsDir= /u01/app/oracle/Middleware/Oracle_Home/wlserver/server

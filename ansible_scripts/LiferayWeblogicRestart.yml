@@ -1,0 +1,86 @@
+---
+# Ansible script to do clean restart weblogic on target servers.
+#Usage: ansible-playbook -i inventory Liferayweblogicstatus.yml -l <envType>
+#Usage: ansible-playbook -i inventory Liferayweblogucstatus.yml -l DEV
+##power devops-
+
+- hosts: all
+  remote_user: '{{ mi_user }}'
+
+  vars_files:
+    - ./vars/passwd.yml
+
+  tasks:
+
+  - name: create output file
+    file: path={{workspace}}/results.txt state=touch
+    register: fileCreate
+    delegate_to: localhost
+
+
+  - name:  Stopping Managed Servers on node1
+    shell: cd {{domainDir}}/bin && sh stopManagedWebLogic.sh {{ item }}
+    with_items:
+      - managed1
+      - managed2
+    become: yes
+    become_user: oracle
+    become_method: sudo
+    ignore_errors: yes
+    when: inventory_hostname in groups['Node1']
+    run_once: true
+
+  - name: Cleaning tmp & cache directories for Managed Server managed1
+    file:
+      path: '{{domainDir}}/servers/{{ item.servers }}/{{ item.deles }}'
+      state: absent
+    with_items:
+      - { servers: 'managed1', deles: 'tmp' }
+      - { servers: 'managed1', deles: 'cache' }
+      - { servers: 'managed2', deles: 'tmp' }
+      - { servers: 'managed2', deles: 'cache' }
+    become: yes
+    become_user: oracle
+    become_method: sudo
+    when: inventory_hostname in groups['Node1']
+    run_once: true
+
+  - name: Starting Managed Servers on Node1
+    shell: cd {{domainDir}}/bin; nohup sh startManagedWebLogic.sh {{ item }} > {{ item }}.log &
+    with_items:
+      - managed1
+      - managed2
+    become: yes
+    become_user: oracle
+    become_method: sudo
+    when: inventory_hostname in groups['Node1']
+    run_once: true
+
+
+  - name: Wait until managed server managed1 comes to RUNNING Mode
+    wait_for:
+      path: '{{domainDir}}/bin/{{ item }}.log'
+      search_regex: RUNNING
+    with_items:
+      - managed1
+      - managed2
+    become: yes
+    become_user: oracle
+    become_method: sudo
+    when: inventory_hostname in groups['Node1']
+    run_once: true
+
+  - name: Executing wlst script for Weblogic status
+    shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}}
+    become: yes
+    become_user: oracle
+    become_method: sudo
+    register: resCmd
+    when: inventory_hostname in groups['Node1']
+    run_once: true
+
+  - name: print weblogic status to results file
+    shell: echo "Created file info with Timestamp - {{resCmd.stdout}}" >> {{workspace}}/results.txt
+    when: not(resCmd|skipped)
+    delegate_to: localhost
+    run_once: true

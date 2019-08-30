@@ -1,0 +1,16 @@
+[DEV01]
+#Lifeary
+aserver    ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+managed1   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+managed3   ansible_ssh_host=67.205.176.89   ansible_connection=ssh   ansible_user=sdasari
+managed2   ansible_ssh_host=165.22.45.221   ansible_connection=ssh   ansible_user=sdasari
+
+
+
+[Aserver]
+aserver
+
+[Mserver]
+managed1
+managed2
+managed3
