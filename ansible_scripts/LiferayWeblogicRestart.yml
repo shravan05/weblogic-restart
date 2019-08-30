@@ -16,9 +16,9 @@
   tasks:
 
     - include: node1.yml
-      delegate_to: $item
+      delegate_to: {{ item }}
       with_items: ${groups.liferayDEV01_Node1}
 
     - include: node2.yml
-      delegate_to: $item
+      delegate_to: {{ item }}
       with_items: ${groups.liferayDEV01_Node2}
