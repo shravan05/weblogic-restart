@@ -24,7 +24,7 @@
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
-  - name: Cleaning tmp & cache directories for Managed Server managed1
+  - name: Cleaning tmp & cache directories for Managed Servers on node1
     file:
       path: '{{domainDir}}/servers/{{ item.servers }}/{{ item.deles }}'
       state: absent
@@ -45,7 +45,7 @@
     run_once: true
 
 
-  - name: Wait until managed server managed1 comes to RUNNING Mode
+  - name: Wait until managed servers comes to RUNNING Mode on node1
     wait_for:
       path: '{{domainDir}}/bin/{{ item }}.log'
       search_regex: RUNNING
@@ -61,4 +61,5 @@
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
-  - debug: msg='Below is the serverstatus..{{resCmd}}'
+  - debug: msg='Below is the serverstatus..{{resCmd.stdout}}'
+    run_once: true
