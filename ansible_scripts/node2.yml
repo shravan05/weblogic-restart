@@ -1,0 +1,37 @@
+
+tasks:
+
+  - name:  Stopping Managed Servers on node2
+    shell: cd {{domainDir}}/bin && sh stopManagedWebLogic.sh {{ item }}
+    with_items:
+      - managed3
+    ignore_errors: yes
+    when: inventory_hostname in groups['liferayDEV01_Node2']
+    run_once: true
+
+  - name: Cleaning tmp & cache directories for Managed Servers on node2
+    file:
+      path: '{{domainDir}}/servers/{{ item.servers }}/{{ item.deles }}'
+      state: absent
+    with_items:
+      - { servers: 'managed3', deles: 'tmp' }
+      - { servers: 'managed3', deles: 'cache' }
+    when: inventory_hostname in groups['liferayDEV01_Node2']
+    run_once: true
+
+  - name: Starting Managed Servers on Node2
+    shell: cd {{domainDir}}/bin; nohup sh startManagedWebLogic.sh {{ item }} > {{ item }}.log &
+    with_items:
+      - managed3
+    when: inventory_hostname in groups['liferayDEV01_Node2']
+    run_once: true
+
+
+  - name: Wait until managed servers comes to RUNNING Mode on node2
+    wait_for:
+      path: '{{domainDir}}/bin/{{ item }}.log'
+      search_regex: RUNNING
+    with_items:
+      - managed3
+    when: inventory_hostname in groups['liferayDEV01_Node2']
+    run_once: true

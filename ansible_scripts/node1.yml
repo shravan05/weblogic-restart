@@ -1,0 +1,56 @@
+  tasks:
+
+  - name:  Stopping Managed Servers on node1
+    shell: cd {{domainDir}}/bin && sh stopManagedWebLogic.sh {{ item }}
+    with_items:
+      - managed1
+      - managed2
+    ignore_errors: yes
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
+
+  - name: Cleaning tmp & cache directories for Managed Servers on node1
+    file:
+      path: '{{domainDir}}/servers/{{ item.servers }}/{{ item.deles }}'
+      state: absent
+    with_items:
+      - { servers: 'managed1', deles: 'tmp' }
+      - { servers: 'managed1', deles: 'cache' }
+      - { servers: 'managed2', deles: 'tmp' }
+      - { servers: 'managed2', deles: 'cache' }
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
+
+  - name: Starting Managed Servers on Node1
+    shell: cd {{domainDir}}/bin; nohup sh startManagedWebLogic.sh {{ item }} > {{ item }}.log &
+    with_items:
+      - managed1
+      - managed2
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
+
+
+  - name: Wait until managed servers comes to RUNNING Mode on node1
+    wait_for:
+      path: '{{domainDir}}/bin/{{ item }}.log'
+      search_regex: RUNNING
+    with_items:
+      - managed1
+      - managed2
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
+
+  - name: Executing wlst script for Weblogic status
+    shell: cd {{wlsDir}}/bin && sh serverstatus.sh {{weblogicUser}} {{weblogicPass}} > serverstatus.log
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
+
+  - name: Capturing serverstatus
+    shell: cat {{wlsDir}}/bin/serverstatus.log
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    register: op
+    run_once: true
+
+  - debug: msg='Servers Status..{{op.stdout.replace('\\"',':').split('\n')}}'
+    when: inventory_hostname in groups['liferayDEV01_Node1']
+    run_once: true
