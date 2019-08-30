@@ -60,6 +60,11 @@
     when: inventory_hostname in groups['liferayDEV01_Node1']
     run_once: true
 
-  - name: Printing serverstatus
+  - name: Capturing serverstatus
     shell: cat {{wlsDir}}/bin/serverstatus.log
+    register: op
+    run_once: true
+
+  - name: printing servers status
+    shell: echo "{{op.stdout}}"
     run_once: true
